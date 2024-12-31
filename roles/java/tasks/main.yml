@@ -1,0 +1,11 @@
+---
+# tasks file for roles/java
+- name: Update APT package manager
+  apt:
+    update_cache: yes
+
+- name: Install OpenJDK 17
+  apt:
+    name: openjdk-17-jdk
+    state: present
+

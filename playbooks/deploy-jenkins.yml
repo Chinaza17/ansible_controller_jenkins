@@ -1,0 +1,36 @@
+---
+- name: Deploy Jenkins on EC2
+  hosts: jenkins
+  become: yes
+  roles:
+    - role: ../roles/java
+    - role: ../roles/jenkins
+    - role: ../roles/configure-jenkins
+
+  tasks:
+    - name: Check if Jenkins is installed
+      command: dpkg -l | grep jenkins
+      register: jenkins_check
+      ignore_errors: yes
+
+    - debug:
+        var: jenkins_check.stdout
+
+    - name: Ensure Jenkins service exists and is started
+      systemd:
+        name: jenkins
+        state: started
+        enabled: yes
+      register: jenkins_service_status
+      when: jenkins_check.stdout != ""
+
+    - debug:
+        var: jenkins_service_status
+
+    - name: Check if Jenkins service exists
+      command: systemctl status jenkins
+      register: jenkins_service
+      ignore_errors: yes
+
+    - debug:
+        var: jenkins_service.stdout

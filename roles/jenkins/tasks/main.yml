@@ -1,0 +1,42 @@
+# ---
+# # tasks file for roles/jenkins
+# - name: Add Jenkins repository key
+#   apt_key:
+#     url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+#     keyring: /usr/share/keyrings/jenkins-keyring.asc
+#     state: present
+
+# - name: Add Jenkins APT repository
+#   apt_repository:
+#     repo: 'deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/'
+#     state: present
+#     filename: jenkins
+
+# - name: Install Jenkins
+#   apt:
+#     name: jenkins
+#     state: present
+#     update_cache: yes
+
+# - name: Ensure Jenkins service is started
+#   systemd:
+#     name: jenkins
+#     state: started
+#     enabled: yes
+
+- name: Ensure Jenkins keyring directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Download Jenkins GPG key
+  ansible.builtin.get_url:
+    url: https://pkg.jenkins.io/debian/jenkins.io.key
+    dest: /etc/apt/keyrings/jenkins-keyring.asc
+    mode: '0644'
+
+- name: Add Jenkins repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian binary/"
+    state: present

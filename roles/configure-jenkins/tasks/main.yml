@@ -1,0 +1,9 @@
+---
+# tasks file for roles/configure-jenkins
+- name: Ensure Jenkins is started
+  service:
+    name: jenkins
+    state: started
+    enabled: yes
+
+

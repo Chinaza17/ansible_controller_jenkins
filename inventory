@@ -1,0 +1,2 @@
+[jenkins]
+35.176.23.100 ansible_user=ubuntu ansible_ssh_private_key_file=adaugo.pem
